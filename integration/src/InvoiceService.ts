@@ -27,7 +27,7 @@ export class InvoiceService {
       orderId: order.id,
       customerId: order.customerId,
       items: order.items,
-      totalAmount: order.totalAmount,
+      totalAmount: order.totalAmount + tax,
       tax,
       paid: false,
       createdAt: new Date()
