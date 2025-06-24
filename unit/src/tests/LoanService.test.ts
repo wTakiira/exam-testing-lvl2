@@ -11,6 +11,33 @@ beforeEach(() => {
 });
 
 describe('LoanService Unit Tests', () => {
+
+
+  it('Doit créer un livre avec les bonnes propriétés', () => {
+    const book = new Book('10', 'Seigneur des Anneaux', 'J. R. R. Tolkien');
+    expect(book.id).toBe('10');
+    expect(book.title).toBe('Seigneur des Anneaux');
+    expect(book.author).toBe('J. R. R. Tolkien');
+    expect(book.isAvailable()).toBe(true);
+  });
+
+  it('Doit créer un utilisateur et lui permettre d\'emprunter', () => {
+    const user = new User('4', 'Lucie', 'lucie@monmail.com', 'standard');
+    expect(user.id).toBe('4');
+    expect(user.email).toBe('lucie@monmail.com');
+    expect(user.canBorrow()).toBe(true);
+  });
+
+
+  it('Ne doit pas permettre à un utilisateur standard de dépasser la limite de prêts', () => {
+    const user = new User('u2', 'Marc', 'marc@mail.com', 'standard');
+    user.addLoan('b1');
+    user.addLoan('b2');
+    user.addLoan('b3');
+    expect(user.canBorrow()).toBe(false);
+  });
+
+
   it('Doit pouvoir emprunter un livre quand l\'utilisateur et le livre sont valid', () => {
     const book = new Book('1', 'Manon Lescaut', 'Abbé Prévost');
     const user = new User('1', 'Thomas', 'thomas@monmail.com', 'standard');

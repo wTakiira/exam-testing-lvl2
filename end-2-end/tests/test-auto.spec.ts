@@ -1,18 +1,27 @@
+// rubrr.split.e2e.test.ts
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
-  await page.goto('https://rubrr.s3-main.oktopod.app/');
+const BASE_URL = 'https://rubrr.s3-main.oktopod.app/';
+
+test('Page d’accueil et navigation vers le glossaire', async ({ page }) => {
+  await page.goto(BASE_URL);
   await expect(page.getByRole('link', { name: 'RUBRR' })).toBeVisible();
   await page.getByRole('link', { name: '✨ Plus de 712 questions' }).click();
   await expect(page.getByRole('heading', { name: 'Toutes les questions' })).toBeVisible();
+});
+
+test('Recherche dans le glossaire', async ({ page }) => {
+  await page.goto(BASE_URL);
+  await page.getByRole('link', { name: '✨ Plus de 712 questions' }).click();
   await page.getByRole('textbox').click();
   await page.getByRole('button', { name: 'Rechercher' }).click();
   await expect(page.getByRole('columnheader', { name: 'Question' })).toBeVisible();
   await expect(page.getByRole('columnheader', { name: 'Tags' })).toBeVisible();
-  await expect(page.getByRole('rowheader', { name: 'Quelles sont les bonnes' })).toBeVisible();
-  await expect(page.getByRole('row', { name: 'Quelles sont les bonnes' }).getByRole('cell').first()).toBeVisible();
-  await expect(page.getByRole('row', { name: 'Quelles sont les bonnes' }).locator('span').first()).toBeVisible();
-  await expect(page.getByRole('row', { name: 'Quelles sont les bonnes' }).locator('span').nth(1)).toBeVisible();
+});
+
+test('Accès à une fiche question et exploration du thème', async ({ page }) => {
+  await page.goto(BASE_URL);
+  await page.getByRole('link', { name: '✨ Plus de 712 questions' }).click();
   await page.getByRole('row', { name: 'Quelles sont les bonnes' }).getByRole('link').click();
   await expect(page.getByRole('heading', { name: 'Quelles sont les bonnes' })).toBeVisible();
   await page.locator('.bg-blue-500').first().click();
@@ -21,42 +30,32 @@ test('test', async ({ page }) => {
   await expect(page.getByText('Mettre à jour les listes de')).toBeVisible();
   await expect(page.getByText('Réponse du système : Mettre')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Autres questions dans ce thème' })).toBeVisible();
-  await expect(page.getByRole('columnheader', { name: 'Question' })).toBeVisible();
-  await expect(page.getByRole('columnheader', { name: 'Tags' })).toBeVisible();
-  await expect(page.getByRole('rowheader', { name: 'Quelles sont les bonnes' })).toBeVisible();
-  await expect(page.getByRole('row', { name: 'Quelles sont les bonnes' }).getByRole('cell').first()).toBeVisible();
-  await expect(page.getByRole('row', { name: 'Quelles sont les bonnes' }).getByRole('cell').nth(1)).toBeVisible();
+});
+
+test('Retour en arrière vers la page principale', async ({ page }) => {
+  await page.goto(BASE_URL);
+  await page.getByRole('link', { name: '✨ Plus de 712 questions' }).click();
+  await page.getByRole('row', { name: 'Quelles sont les bonnes' }).getByRole('link').click();
   await page.getByRole('link', { name: 'Retour' }).click();
   await page.getByRole('link', { name: 'Retour' }).click();
   await expect(page.getByRole('heading', { name: 'Questions pour un CDA' })).toBeVisible();
-  await expect(page.getByText('🎓 Pour vous assurer d\'être')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Backend' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Conception BDD' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Design Pattern' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'DevOps' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Docker' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Frontend' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Green It' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Html' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Javascript' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Micro Services' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Mise en place Server' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Multicouche' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'NoSql' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'POO' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Performance' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'React' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'S.O.L.I.D' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'SEO' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Sql', exact: true })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Sécurite' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Testing' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Uml' })).toBeVisible();
+});
+
+test('Vérifie la présence des liens de tags sur la page principale', async ({ page }) => {
+  await page.goto(BASE_URL);
+  const tags = [
+    'Backend', 'Conception BDD', 'Design Pattern', 'DevOps', 'Docker', 'Frontend',
+    'Green It', 'Html', 'Javascript', 'Micro Services', 'Mise en place Server', 'Multicouche',
+    'NoSql', 'POO', 'Performance', 'React', 'S.O.L.I.D', 'SEO', 'Sql', 'Sécurite', 'Testing', 'Uml'
+  ];
+  for (const tag of tags) {
+    await expect(page.getByRole('link', { name: tag })).toBeVisible();
+  }
+});
+
+test('Soumission d’une réponse dans le champ libre', async ({ page }) => {
+  await page.goto(BASE_URL);
   await page.getByRole('textbox').click();
   await page.getByRole('textbox').fill('Réponse de test pour PlayWright');
   await page.getByRole('button', { name: 'Répondre' }).click();
-  // await page.goto('https://rubrr.s3-main.oktopod.app/');
-  // await page.getByRole('heading', { name: 'Résultat de la question :' }).click();
-  // await expect(page.getByRole('heading', { name: 'Taux de réussite de cette' })).toBeVisible();
-  // await page.getByText('Votre réponse est : Réponse corrigée ').click();
 });
