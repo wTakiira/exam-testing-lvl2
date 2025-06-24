@@ -1,0 +1,15 @@
+{
+  "name": "end-2-end",
+  "version": "1.0.0",
+  "description": "Votre mission est de réaliser des tests **end-to-end** sur le site suivant :   https://rubrr.s3-main.oktopod.app/",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.53.1",
+    "@types/node": "^24.0.3"
+  }
+}
